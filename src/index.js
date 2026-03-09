@@ -6,9 +6,6 @@ const client = new Client({
 });
 
 const commands = [
-  new SlashCommandBuilder()
-    .setName("testar")
-    .setDescription("Testa se o bot está funcionando")
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
