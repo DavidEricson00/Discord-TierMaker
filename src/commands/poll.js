@@ -48,6 +48,9 @@ function parseOptions(optionsString) {
 }
 
 export async function execute(interaction) {
+
+  await interaction.deferReply();
+
   const titulo = interaction.options.getString("titulo");
   const opcoes = interaction.options.getString("opcoes");
   const duracao = interaction.options.getInteger("duracao");
@@ -55,20 +58,18 @@ export async function execute(interaction) {
   const answers = parseOptions(opcoes);
 
   if (answers.length < 2) {
-    return interaction.reply({
-      content: "Você precisa fornecer pelo menos 2 opções.",
-      ephemeral: true
+    return interaction.editReply({
+      content: "Você precisa fornecer pelo menos 2 opções."
     });
   }
 
   if (answers.length > 10) {
-    return interaction.reply({
-      content: "Máximo de 10 opções.",
-      ephemeral: true
+    return interaction.editReply({
+      content: "Máximo de 10 opções."
     });
   }
 
-  await interaction.reply({
+  await interaction.editReply({
     poll: {
       question: {
         text: titulo
