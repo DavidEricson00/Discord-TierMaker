@@ -1,45 +1,35 @@
 import "dotenv/config";
-import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from "discord.js";
+import { Client, GatewayIntentBits } from "discord.js";
+import * as testar from "./commands/testar.js";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-const commands = [
-].map(command => command.toJSON());
+const commands = {
+  testar
+};
 
-const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
-
-async function registerCommands() {
-  try {
-    console.log("Registrando comandos...");
-
-    await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID
-      ),
-      { body: commands }
-    );
-
-    console.log("Comando registrado.");
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-client.once("ready", () => {
+client.once("clientReady", () => {
   console.log(`Bot online como ${client.user.tag}`);
-});
+})
 
 client.on("interactionCreate", async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.commandName === "testar") {
-    await interaction.reply("Olá mundo!");
+  const command = commands[interaction.commandName];
+
+  if (!command) return;
+
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({
+      content: "Erro ao executar comando.",
+      ephemeral: true
+    });
   }
 });
-
-await registerCommands();
 
 client.login(process.env.DISCORD_TOKEN);
