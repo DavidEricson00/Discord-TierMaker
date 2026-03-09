@@ -1,10 +1,8 @@
 import "dotenv/config";
 import { REST, Routes } from "discord.js";
-import * as testar from "./commands/testar.js";
 import * as poll from "./commands/poll.js";
 
 const commands = [
-    testar.data.toJSON(),
     poll.data.toJSON()
 ];
 
